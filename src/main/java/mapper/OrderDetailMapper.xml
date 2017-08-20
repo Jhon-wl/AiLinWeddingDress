@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ailin.dao.OrderDetailDao">
+    <resultMap id="OrderDetail" type="com.ailin.model.info.OrderDetail">
+        <id column="id" property="orderId"/>
+        <result column="order_number" property="order_number"/>
+        <result column="pay_way" property="pay_way"/>
+        <result column="transfer_conpany" property="transfer_conpany"/>
+        <result column="transfer_time" property="transfer_time"/>
+        <result column="order_price" property="order_price"/>
+        <result column="status" property="status"/>
+        <result column="consumer_name" property="consumer_name"/>
+        <result column="consumer_phone" property="consumer_phone"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="street" property="street"/>
+        <result column="post" property="post"/>
+        <result column="detail" property="detail"/>
+    </resultMap>
+    <resultMap id="OrderGoodsList" type="com.ailin.model.info.OrderGoodsList">
+        <id column="id" property="orderId"/>
+        <result column="size" property="goods_size"/>
+        <result column="count" property="goods_count"/>
+        <result column="goods_name" property="goods_name"/>
+        <result column="goods_price" property="goods_price"/>
+        <result column="color" property="goods_color"/>
+        <result column="url" property="goods_image_url"/>
+        <result column="shop_name" property="shop_name"/>
+        <result column="telephone" property="telephone"/>
+    </resultMap>
+    <resultMap id="TransferDetail" type="com.ailin.model.info.TransferDetail">
+        <id column="id" property="orderId"/>
+        <result column="order_number" property="order_number"/>
+        <result column="transfer_conpany" property="transfer_conpany"/>
+        <result column="transfer_time" property="transfer_time"/>
+        <result column="transfer_begin" property="transfer_begin"/>
+        <result column="transfer_end" property="transfer_end"/>
+    </resultMap>
+    <sql id="select_order_column">
+        SELECT
+        o.order_number,
+        o.pay_way,
+        o.transfer_conpany,
+        o.transfer_time,
+        o.price AS order_price,
+        o.status,
+        ad.consumer_name,
+        ad.consumer_phone,
+        ad.province,
+        ad.city,
+        ad.street,
+        ad.post,
+        ad.detail
+    </sql>
+    <sql id="select_goods_column">
+        SELECT
+        ogr.size,
+        ogr.count,
+        g.name AS goods_name,
+        g.price AS goods_price,
+        g.color,
+        gi.url,
+        s.name AS shop_name,
+        s.telephone
+    </sql>
+    <sql id="select_transfer_column">
+        SELECT
+        o.order_number，
+        o.transfer_conpany,
+        o.transfer_time,
+        o.transfer_begin,
+        o.transfer_end
+    </sql>
+    <sql id="from_table">
+        FROM
+        tb_order_goods_relation AS ogr,
+        tb_goods AS g,
+        tb_shop_goods_relation AS sgr,
+        tb_shop AS s,
+        tb_goods_image AS gi,
+    </sql>
+    <sql id="condition">
+        WHERE
+        ogr.order_id=#{orderId}
+        AND sgr.id=ogr.goods_id
+        AND sgr.shop_id=s.id
+        AND sgr.goods_id=g.id
+        AND g.id=gi.goods_id
+        AND gi.position=1
+    </sql>
+
+    <select id="selectOrderDetail">
+        <include refid="select_order_column"/>
+        FROM
+        tb_order AS o,
+        tb_address AS ad
+        WHERE
+        ad.id=o.address_id
+        AND o.id=#{orderId}
+    </select>
+
+    <select id="orderGoodsList">
+        <include refid="select_column"/>
+        <include refid="from_table"/>
+        <include refid="condition"/>
+    </select>
+
+    <select id="selectTransferDtail">
+        <include refid="select_transfer_column"/>
+        FROM
+        tb_order AS o
+        WHERE
+        o.id=#{orderId}
+    </select>
+</mapper>

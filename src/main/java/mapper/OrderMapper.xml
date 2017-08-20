@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.ailin.dao.OrderListDao">
+    <!--查询所有订单列表-->
+    <resultMap id="OrderList" type="com.ailin.model.info.OrderList">
+        <id column="orderId" property="order_id"/>
+        <result column="orderPrice" property="order_price"/>
+        <result column="status" property="status"/>
+        <result column="size" property="goods_size"/>
+        <result column="cout" property="goods_count"/>
+        <result column="goodsId" property="goods_id"/>
+        <result column="goodsName" property="goods_name"/>
+        <result column="color" property="goods_color"/>
+        <result column="goodsPrice" property="goods_price"/>
+        <result column="url" property="goods_image_url"/>
+        <result column="shopId" property="shop_id"/>
+        <result column="shopName" property="shop_name"/>
+    </resultMap>
+    <sql id="select_column">
+        SELECT
+	    o.id AS orderId,
+  	    o.price AS orderPrice,
+  	    o.status,
+  	    ogr.size,
+  	    ogr.count,
+  	    s.id AS shopId,
+  	    s.name AS shopName,
+  	    g.id AS goodsId,
+  	    g.name AS goodsName,
+  	    g.price AS goodsPrice,
+  	    g.color,
+  	    gi.url
+    </sql>
+    <sql id="from_table">
+       FROM tb_order AS o,
+       tb_order_goods_relation AS ogr,
+       tb_goods AS g,
+       tb_shop_goods_relation AS sgr,
+       tb_shop AS s,
+       tb_goods_image AS gi
+    </sql>
+    <sql id="condition">
+        WHERE
+	    ogr.order_id=o.id
+	    AND sgr.id=ogr.goods_id
+	    AND sgr.shop_id=s.id
+	    AND sgr.goods_id=g.id
+	    AND g.id=gi.goods_id
+	    AND o.consumer_id=#{consumerId}
+	    AND gi.position=1
+
+    </sql>
+
+    <!--查询全部订单-->
+    <select id="selectAllOrder">
+        <include refid="select_column"/>
+        <include refid="from_table"/>
+        <include refid="condition"/>
+    </select>
+
+    <!--查询全部待付款订单-->
+    <select id="receivingOrder">
+        <include refid="select_column"/>
+        <include refid="from_table"/>
+        <include refid="condition"/> AND o.status=0
+    </select>
+
+    <!--查询全部待收货订单-->
+    <select id="receivingOrder">
+        <include refid="select_column"/>
+        <include refid="from_table"/>
+        <include refid="condition"/> AND o.status=1
+    </select>
+
+    <!--查询全部待评价订单-->
+    <select id="receivingOrder">
+        <include refid="select_colunm"/>
+        <include refid="from_table"/>
+        <include refid="condition"/> AND o.status=2
+    </select>
+
+</mapper>

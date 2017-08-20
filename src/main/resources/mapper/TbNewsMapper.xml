@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.ailin.dao.TbNewsDao" >
+    <resultMap id="BaseResultMap" type="com.ailin.model.TbNews" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="last_update" property="lastUpdate" jdbcType="TIMESTAMP" />
+        <result column="visibility" property="visibility" jdbcType="TINYINT" />
+        <result column="shop_id" property="shopId" jdbcType="INTEGER" />
+        <result column="title" property="title" jdbcType="VARCHAR" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, create_time, last_update, visibility, shop_id, title, content
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from tb_news
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete from tb_news
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.ailin.model.TbNews" useGeneratedKeys="true" keyProperty="id" >
+        insert into tb_news (create_time, last_update, visibility,
+        shop_id, title, content
+        )
+        values (#{createTime,jdbcType=TIMESTAMP}, #{lastUpdate,jdbcType=TIMESTAMP}, #{visibility,jdbcType=TINYINT},
+        #{shopId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.ailin.model.TbNews" useGeneratedKeys="true" keyProperty="id" >
+        insert into tb_news
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            create_time,
+            last_update,
+            visibility,
+            shop_id,
+            title,
+            content,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            #{createTime,jdbcType=TIMESTAMP},
+            #{lastUpdate,jdbcType=TIMESTAMP},
+            #{visibility,jdbcType=TINYINT},
+            #{shopId,jdbcType=INTEGER},
+            #{title,jdbcType=VARCHAR},
+            #{content,jdbcType=VARCHAR},
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ailin.model.TbNews" >
+        update tb_news
+        <set >
+            <if test="createTime != null" >
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastUpdate != null" >
+                last_update = #{lastUpdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="visibility != null" >
+                visibility = #{visibility,jdbcType=TINYINT},
+            </if>
+            <if test="shopId != null" >
+                shop_id = #{shopId,jdbcType=INTEGER},
+            </if>
+            <if test="title != null" >
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null" >
+                content = #{content,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ailin.model.TbNews" >
+        update tb_news
+        set create_time = #{createTime,jdbcType=TIMESTAMP},
+        last_update = #{lastUpdate,jdbcType=TIMESTAMP},
+        visibility = #{visibility,jdbcType=TINYINT},
+        shop_id = #{shopId,jdbcType=INTEGER},
+        title = #{title,jdbcType=VARCHAR},
+        content = #{content,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectAllNews" resultMap="BaseResultMap" parameterType="com.ailin.model.TbNews">
+        select id,shop_id,title,content from tb_news
+    </select>
+</mapper>

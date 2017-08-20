@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.ailin.dao.TbHomeRotationDao" >
+    <resultMap id="BaseResultMap" type="com.ailin.model.TbHomeRotation" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="last_update" property="lastUpdate" jdbcType="TIMESTAMP" />
+        <result column="visibility" property="visibility" jdbcType="TINYINT" />
+        <result column="goods_id" property="goodsId" jdbcType="INTEGER" />
+        <result column="position" property="position" jdbcType="INTEGER" />
+        <result column="url" property="url" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, create_time, last_update, visibility, goods_id, `position`, url
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from tb_home_rotation
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete from tb_home_rotation
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.ailin.model.TbHomeRotation" useGeneratedKeys="true" keyProperty="id" >
+        insert into tb_home_rotation (create_time, last_update, visibility,
+        goods_id, `position`, url
+        )
+        values (#{createTime,jdbcType=TIMESTAMP}, #{lastUpdate,jdbcType=TIMESTAMP}, #{visibility,jdbcType=TINYINT},
+        #{goodsId,jdbcType=INTEGER}, #{position,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.ailin.model.TbHomeRotation" useGeneratedKeys="true" keyProperty="id" >
+        insert into tb_home_rotation
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            create_time,
+            last_update,
+            visibility,
+            goods_id,
+            `position`,
+            url,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            #{createTime,jdbcType=TIMESTAMP},
+            #{lastUpdate,jdbcType=TIMESTAMP},
+            #{visibility,jdbcType=TINYINT},
+            #{goodsId,jdbcType=INTEGER},
+            #{position,jdbcType=INTEGER},
+            #{url,jdbcType=VARCHAR},
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ailin.model.TbHomeRotation" >
+        update tb_home_rotation
+        <set >
+            <if test="createTime != null" >
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastUpdate != null" >
+                last_update = #{lastUpdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="visibility != null" >
+                visibility = #{visibility,jdbcType=TINYINT},
+            </if>
+            <if test="goodsId != null" >
+                goods_id = #{goodsId,jdbcType=INTEGER},
+            </if>
+            <if test="position != null" >
+                `position` = #{position,jdbcType=INTEGER},
+            </if>
+            <if test="url != null" >
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ailin.model.TbHomeRotation" >
+        update tb_home_rotation
+        set create_time = #{createTime,jdbcType=TIMESTAMP},
+        last_update = #{lastUpdate,jdbcType=TIMESTAMP},
+        visibility = #{visibility,jdbcType=TINYINT},
+        goods_id = #{goodsId,jdbcType=INTEGER},
+        `position` = #{position,jdbcType=INTEGER},
+        url = #{url,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectAll" resultMap="BaseResultMap" parameterType="com.ailin.model.TbHomeRotation">
+        select * from tb_home_rotation where visibility=0
+    </select>
+</mapper>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.ailin.dao.TbShopDao" >
+    <resultMap id="BaseResultMap" type="com.ailin.model.TbShop" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="visibility" property="visibility" jdbcType="TINYINT" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="last_update" property="lastUpdate" jdbcType="TIMESTAMP" />
+        <result column="image" property="image" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="sale_count" property="saleCount" jdbcType="INTEGER" />
+        <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+        <result column="adress" property="adress" jdbcType="VARCHAR" />
+        <result column="manager_id" property="managerId" jdbcType="INTEGER" />
+        <collection property="managers" ofType="com.ailin.model.TbManager" column="managerId">
+            <id column="id" property="id" jdbcType="INTEGER" />
+            <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+            <result column="last_update" property="lastUpdate" jdbcType="TIMESTAMP" />
+            <result column="visibility" property="visibility" jdbcType="TINYINT" />
+            <result column="user_name" property="userName" jdbcType="VARCHAR" />
+            <result column="password" property="password" jdbcType="VARCHAR" />
+            <result column="salt" property="salt" jdbcType="VARCHAR" />
+        </collection>
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, visibility, create_time, last_update, image, `name`, sale_count, telephone, adress,
+        manager_id
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from tb_shop
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete from tb_shop
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.ailin.model.TbShop" useGeneratedKeys="true" keyProperty="id" >
+        insert into tb_shop (visibility, create_time, last_update,
+        image, `name`, sale_count,
+        telephone, adress, manager_id
+        )
+        values (#{visibility,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{lastUpdate,jdbcType=TIMESTAMP},
+        #{image,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{saleCount,jdbcType=INTEGER},
+        #{telephone,jdbcType=VARCHAR}, #{adress,jdbcType=VARCHAR}, #{managerId,jdbcType=INTEGER}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.ailin.model.TbShop" useGeneratedKeys="true" keyProperty="id" >
+        insert into tb_shop
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            visibility,
+            create_time,
+            last_update,
+            image,
+            `name`,
+            sale_count,
+            telephone,
+            adress,
+            manager_id,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            #{visibility,jdbcType=TINYINT},
+            #{createTime,jdbcType=TIMESTAMP},
+            #{lastUpdate,jdbcType=TIMESTAMP},
+            #{image,jdbcType=VARCHAR},
+            #{name,jdbcType=VARCHAR},
+            #{saleCount,jdbcType=INTEGER},
+            #{telephone,jdbcType=VARCHAR},
+            #{adress,jdbcType=VARCHAR},
+            #{managerId,jdbcType=INTEGER},
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ailin.model.TbShop" >
+        update tb_shop
+        <set >
+            <if test="visibility != null" >
+                visibility = #{visibility,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null" >
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastUpdate != null" >
+                last_update = #{lastUpdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="image != null" >
+                image = #{image,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null" >
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="saleCount != null" >
+                sale_count = #{saleCount,jdbcType=INTEGER},
+            </if>
+            <if test="telephone != null" >
+                telephone = #{telephone,jdbcType=VARCHAR},
+            </if>
+            <if test="adress != null" >
+                adress = #{adress,jdbcType=VARCHAR},
+            </if>
+            <if test="managerId != null" >
+                manager_id = #{managerId,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ailin.model.TbShop" >
+        update tb_shop
+        set visibility = #{visibility,jdbcType=TINYINT},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        last_update = #{lastUpdate,jdbcType=TIMESTAMP},
+        image = #{image,jdbcType=VARCHAR},
+        `name` = #{name,jdbcType=VARCHAR},
+        sale_count = #{saleCount,jdbcType=INTEGER},
+        telephone = #{telephone,jdbcType=VARCHAR},
+        adress = #{adress,jdbcType=VARCHAR},
+        manager_id = #{managerId,jdbcType=INTEGER}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+    <select id="selectWithManager" resultMap="BaseResultMap" parameterType="String">
+        select
+        s.id,s.image,s.name,s.telephone,s.adress,m.user_name
+        from tb_shop as s left join tb_manager as m on s.manager_Id=m.id
+    </select>
+
+</mapper>

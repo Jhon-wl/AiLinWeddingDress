@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <!-- 配置整合MyBatis -->
+    <!-- 配置数据库相关参数 -->
+    <!--扫描注解生成bean-->
+    <context:annotation-config/>
+    <!--包扫描-->
+    <context:component-scan base-package="com.ailin"/>
+    <!-- properties的属性：${url} -->
+    <context:property-placeholder location="classpath:jdbc.properties" />
+    <!-- 数据库连接池 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <!-- 配置连接池属性 -->
+        <property name="driverClass" value="${jdbc.drive}" />
+        <property name="jdbcUrl" value="${jdbc.url}" />
+        <property name="user" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+        <!-- c3p0连接池的私有属性 -->
+        <property name="maxPoolSize" value="30" />
+        <property name="minPoolSize" value="10" />
+        <!-- 关闭连接后不自动commit- -->
+        <property name="autoCommitOnClose" value="false" />
+        <!-- 获取连接超时时间 -->
+        <property name="checkoutTimeout" value="1000" />
+        <!-- 当获取连接失败重复次数 -->
+        <property name="acquireRetryAttempts" value="2" />
+    </bean>
+
+    <!-- 3:配置SqlSessionFactory对象 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 注入数据库连接池 -->
+        <property name="dataSource" ref="dataSource" />
+        <!-- 配置MyBatis全局配置文件 -->
+        <property name="configLocation" value="classpath:mybatis-config.xml" />
+        <!-- 扫描entity包，使用别名com.ailin.model -->
+        <property name="typeAliasesPackage" value="com.ailin.model" />
+        <!-- 扫描SQL配置文件：mapper需要的xml文件 -->
+        <property name="mapperLocations" value="classpath:mapper/*.xml" />
+    </bean>
+
+    <!-- 配置扫描Dao接口包，动态实现Dao接口，并注入到Spring容器中 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 注入sqlSessionFactory，防止提前错误的初始化 -->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <!-- 给出扫描DAO接口包 -->
+        <property name="basePackage" value="com.ailin.dao"/>
+    </bean>
+    <!--自定义Realm-->
+    <!--<bean id="myRealm" class="com.ailin.util.MyRealm"/>-->
+    <!--安全管理器-->
+    <!--<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">-->
+        <!--<property name="realm" ref="myRealm"/>-->
+    <!--</bean>-->
+    <!--定义shiro拦截器-->
+    <!--<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">-->
+        <!--&lt;!&ndash;shiro的核心安全接口，必须要有&ndash;&gt;-->
+        <!--<property name="securityManager" ref="securityManager"/>-->
+        <!--&lt;!&ndash;身份验证失败则跳转到登录页面&ndash;&gt;-->
+        <!--<property name="loginUrl" value="/login"/>-->
+        <!-- Shiro连接约束配置,即过滤链的定义 -->
+        <!-- anon：它对应的过滤器里面是空的,什么都没做,这里.do和.jsp后面的*表示参数,比方说login.jsp?main这种
+        authc：该过滤器下的页面必须验证后才能访问,它是Shiro内置的一个拦截器org.apache.shiro.web.filter.authc.FormAuthenticationFilter
+                                                         -->
+        <!--<property name="filterChainDefinitions">-->
+            <!--<value>-->
+                <!--/static/**=anon-->
+                <!--/login=anon-->
+            <!--</value>-->
+        <!--</property>-->
+    <!--</bean>-->
+    <!--&lt;!&ndash;保证实现shiro内部的lifecycle函数的bean执行&ndash;&gt;-->
+    <!--<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>-->
+    <!--&lt;!&ndash;开启shiro的注解&ndash;&gt;-->
+    <!--<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"/>-->
+            <!--<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">-->
+                <!--<property name="securityManager" ref="securityManager"/>-->
+            <!--</bean>-->
+    <import resource="classpath:spring-shiro.xml"/>
+
+</beans>

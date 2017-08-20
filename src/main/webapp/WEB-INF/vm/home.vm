@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns="http://java.sun.com/jsf/html">
+<head>
+   <title>消息页面</title>
+</head>
+<body>
+
+    <meta charset="utf-8">
+    成功进入主页面！
+    <a href="/message/get">消息</a>
+</body>
+</html>

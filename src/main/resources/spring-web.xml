@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!-- 配置SpringMVC -->
+    <!-- 1.开启SpringMVC注解模式 -->
+    <!-- 简化配置
+        (1)自动注册DefaultAnnotationHandlerMapping,AnnotationMethonHandlerAdapter
+        (2)默认提供一系列功能：数据绑定、数字和日期的format @NumberFormat,@DataTimeFormat
+            xml和json默认读写支持
+    -->
+
+<!--开启切面编程自动代理-->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+    <!--<mvc:annotation-driven>-->
+        <!--<mvc:message-converters>-->
+
+            <!--<bean class="org.springframework.http.converter.StringHttpMessageConverter"/>-->
+            <!--<bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">-->
+                <!--<property name="supportedMediaTypes">-->
+                    <!--<list>-->
+                        <!--<value>text/html;charset=UTF-8</value>-->
+                        <!--<value>application/json;charset=UTF-8</value>-->
+                    <!--</list>-->
+                <!--</property>-->
+            <!--</bean>-->
+        <!--</mvc:message-converters>-->
+    <!--</mvc:annotation-driven>-->
+<!--开启注解扫描-->
+    <mvc:annotation-driven/>
+
+    <!-- 2.servlet-mapping 映射路径："/" -->
+    <!-- 静态资源默认servlet配置
+        (1)加入对静态资源的处理
+        (2)允许使用"/"做整体映射
+    -->
+    <mvc:default-servlet-handler/>
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/message/get"/>
+            <bean class="com.ailin.util.SessionInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!-- 3.JSP的显示ViewResolver -->
+    <bean id="velocityConfigurer"
+          class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+        <property name="resourceLoaderPath" value="/WEB-INF/vm" />
+        <property name="velocityProperties">
+            <props>
+                <prop key="input.encoding">utf-8</prop>
+                <prop key="output.encoding">utf-8</prop>
+                <!--加载时是否需要缓存-->
+                <prop key="file.resource.loader.cache">false</prop>
+                <!--修改的检查间隔，0为拒绝检查-->
+                <prop key="file.resource.loader.modificationCheckInterval">1</prop>
+                <!--自动加载，false为不让自动加载-->
+                <prop key="velocimacro.library.autoreload">false</prop>
+            </props>
+        </property>
+    </bean>
+    <!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+        <!--<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>-->
+        <!--<property name="prefix" value="/WEB-INF/vm/"/>-->
+        <!--<property name="suffix" value=".vm"/>-->
+    <!--</bean>-->
+    <bean class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+        <!--<property name="prefix" value="/WEB-INF/vm/"/>-->
+        <property name="suffix" value=".vm"/>
+        <property name="contentType" value="text/html;charset=utf-8"/>
+        <!--日期工具，处理日期-->
+        <property name="dateToolAttribute" value="date"/><!--日期函数名称-->
+    </bean>
+
+    <!-- 4.扫描web相关的bean -->
+    <context:component-scan base-package="com.ailin.controller"/>
+</beans>

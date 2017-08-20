@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://java.sun.com/jsf/html">
+<body>
+<head>
+    <meta charset="utf-8">
+    <form action="/consumer/doregist" method="post">
+        用户昵称:<input name="user_name"><br>
+        昵称:<input name="nick_name"><br>
+        用户密码:<input type="password" name="password"><br>
+        用户性别:男<input type="radio" checked name="gender" value="man">女<input type="radio" checked name="gender" value="woman"><br>
+        联系电话:<input name="telephone"><br>
+        用户邮箱:<input name="email"><br>
+##        用户生日：<input name="birthday"><br>
+        <input type="submit" value=注册>&nbsp;&nbsp;&nbsp;<input type="reset" value="取消">
+    </form>
+</head>
+</body>
+</html>

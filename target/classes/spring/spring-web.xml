@@ -8,7 +8,7 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/mvc
-        http://www.springframework.org/schema/mvc/spring-mvc.xsd  ">
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd ">
     <!-- 配置SpringMVC -->
     <!-- 1.开启SpringMVC注解模式 -->
     <!-- 简化配置
@@ -26,20 +26,37 @@
     <mvc:default-servlet-handler/>
 
     <!-- 3.JSP的显示ViewResolver -->
-    <bean id="velocityConfigurer"
-          class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
-        <property name="resourceLoaderPath" value="/WEB-INF/templates" />
-        <property name="velocityProperties">
-            <props>
-                <prop key="input.encoding">utf-8</prop>
-                <prop key="output.encoding">utf-8</prop>
-            </props>
-        </property>
+    <!--<bean class="org.springframework.web.servlet.view.velocity.VelocityConfigurer" name="velocityConfigurer">-->
+        <!--<property name="resourceLoaderPath" value="/WEB-INF/vm"/>-->
+        <!--<property name="velocityProperties">-->
+            <!--<props>-->
+                <!--<prop key="input.encoding">utf-8</prop>-->
+                <!--<prop key="output.encoding">utf-8</prop>-->
+                <!--<prop key="file.resource.loader.cache">false</prop>-->
+                <!--<prop key="file.resource.loader.modificationCheckInterval">1</prop>-->
+                <!--<prop key="velocimacro.library.autoreload">false</prop>-->
+            <!--</props>-->
+        <!--</property>-->
+    <!--</bean>-->
+    <!--<bean class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">-->
+        <!--<property name="suffix" value=".vm"/>-->
+        <!--<property name="contentType" value="text/html;charset=utf-8"/>-->
+
+
+        <!--&lt;!&ndash;日起函数名称&ndash;&gt;-->
+
+    <!--</bean>-->
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/vm/"></property>
+        <property name="suffix" value=".jsp"></property>
     </bean>
-    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
-        <property name="prefix" value="/WEB-INF/vm/"/>
-        <property name="suffix" value=".vm"/>
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 设置默认编码 -->
+        <property name="defaultEncoding" value="utf-8"></property>
+        <!-- 上传图片最大大小5M-->
+        <property name="maxUploadSize" value="5242440"></property>
+        <property name="uploadTempDir" value="/WEB-INF/goods_images"></property>
     </bean>
 
     <!-- 4.扫描web相关的bean -->

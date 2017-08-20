@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.ailin.dao.ShopGoodsRelationDao" >
+  <resultMap id="BaseResultMap" type="com.ailin.model.ShopGoodsRelation" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_update" property="lastUpdate" jdbcType="TIMESTAMP" />
+    <result column="visibility" property="visibility" jdbcType="TINYINT" />
+    <result column="shop_id" property="shopId" jdbcType="INTEGER" />
+    <result column="goods_id" property="goodsId" jdbcType="INTEGER" />
+    <result column="sale_count" property="saleCount" jdbcType="INTEGER" />
+    <result column="quantity" property="quantity" jdbcType="INTEGER" />
+    <association property="goods" resultMap="goodsResultMap"></association>
+    <association property="shop" resultMap="shopResultMap"></association>
+  </resultMap>
+  <resultMap id="goodsResultMap" type="com.ailin.model.Goods" >
+    <id column="g_id" property="id" jdbcType="INTEGER" />
+    <result column="g_create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="putaway_time" property="putawayTime" jdbcType="DATE" />
+    <result column="g_last_update" property="lastUpdate" jdbcType="TIMESTAMP" />
+    <result column="visibility" property="visibility" jdbcType="TINYINT" />
+    <result column="is_putaway" property="isPutaway" jdbcType="TINYINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="hemline" property="hemline" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="style" property="style" jdbcType="VARCHAR" />
+    <result column="color" property="color" jdbcType="VARCHAR" />
+    <result column="g_quantity" property="quantity" jdbcType="INTEGER" />
+    <result column="g_sale_count" property="saleCount" jdbcType="INTEGER" />
+    <result column="weight" property="weight" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="INTEGER" />
+  </resultMap>
+    <resultMap id="shopResultMap" type="com.ailin.model.Shop" >
+    <id column="s_id" property="id" jdbcType="INTEGER" />
+    <result column="visibility" property="visibility" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_update" property="lastUpdate" jdbcType="TIMESTAMP" />
+    <result column="image" property="image" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sale_count" property="saleCount" jdbcType="INTEGER" />
+    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="adress" property="adress" jdbcType="VARCHAR" />
+    <result column="manager_id" property="managerId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    sg.id, sg.create_time, sg.last_update, sg.visibility, sg.shop_id, sg.goods_id, sg.sale_count, sg.quantity
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_shop_goods_relation
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_shop_goods_relation
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ailin.model.ShopGoodsRelation" >
+    insert into tb_shop_goods_relation (id, create_time, last_update, 
+      visibility, shop_id, goods_id, 
+      sale_count, quantity)
+    values (#{id,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{lastUpdate,jdbcType=TIMESTAMP}, 
+      #{visibility,jdbcType=TINYINT}, #{shopId,jdbcType=INTEGER}, #{goodsId,jdbcType=INTEGER}, 
+      #{saleCount,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ailin.model.ShopGoodsRelation" >
+  insert into tb_shop_goods_relation
+  <trim prefix="(" suffix=")" suffixOverrides="," >
+
+    create_time,
+    last_update,
+    visibility,
+    shop_id,
+    goods_id,
+    sale_count,
+    quantity,
+  </trim>
+  <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+    #{createTime,jdbcType=TIMESTAMP},
+    #{lastUpdate,jdbcType=TIMESTAMP},
+    #{visibility,jdbcType=TINYINT},
+    #{shopId,jdbcType=INTEGER},
+    #{goodsId,jdbcType=INTEGER},
+    #{saleCount,jdbcType=INTEGER},
+    #{quantity,jdbcType=INTEGER},
+  </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ailin.model.ShopGoodsRelation">
+    update tb_shop_goods_relation
+    <set >
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdate != null" >
+        last_update = #{lastUpdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="visibility != null" >
+        visibility = #{visibility,jdbcType=TINYINT},
+      </if>
+      <if test="shopId != null" >
+        shop_id = #{shopId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsId != null" >
+        goods_id = #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="saleCount != null" >
+        sale_count = #{saleCount,jdbcType=INTEGER},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ailin.model.ShopGoodsRelation" >
+    update tb_shop_goods_relation
+    set
+      visibility = #{visibility,jdbcType=TINYINT}
+
+    where goods_id = #{goodsId,jdbcType=INTEGER} and shop_id = #{shopId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByshopId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select goods_id
+    from tb_shop_goods_relation
+    where shop_id = #{shopID}
+  </select>
+  <select id="selectByPrimaryKeyWithShopAndGoods" resultMap="BaseResultMap" parameterType="java.lang.Integer"  >
+    SELECT  <include refid="Base_Column_List" />, g.id as g_id, g.create_time as g_create_time, g.putaway_time, g.last_update as g_last_update, g.visibility, g.is_putaway, g.`name`, g.hemline,
+    g.description, g.`style`, g.color, g.quantity as g_quantity, g.sale_count as g_sale_count, g.weight, g.`status`, g.price,s.id as s_id, s.visibility, s.create_time, s.last_update, s.image, s.`name`, s.sale_count, s.telephone, s.adress,
+    s.manager_id
+     FROM tb_shop_goods_relation
+ AS sg LEFT JOIN tb_goods AS g ON g.id=sg.goods_id LEFT JOIN tb_shop AS s ON s.id=sg.shop_id where sg.shop_id=#{shopId} and sg.visibility=0
+  </select>
+  <select id="selectByPrimaryKeyWithShop" resultMap="BaseResultMap" parameterType="java.lang.Integer"  >
+    SELECT  s.*
+    FROM tb_shop_goods_relation
+    AS sg LEFT JOIN tb_shop AS s ON s.id=sg.shop_id where sg.shop_id=#{shopId}
+  </select>
+</mapper>
